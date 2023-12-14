@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSCB Results</title>
+</head>
+<body>
+    <div class="container">
+    <h2><i>{{ name }}</i></h2>
+    <img src="{{ cgviewImg }}" width="800" height="800" >
+    <table class="d">
+    <thead>
+    <th data-sort="int">Genomic Island</th>
+    <th data-sort="int">Start</th>
+    <th data-sort="int">End</th>
+    </thead>
+    {% for id,start,end in df %}
+        <tr>
+            <td>{{ id }}</td>
+            <td>{{ start }}</td>
+            <td>{{ end }}</td>                        
+        </tr>   
+    {% endfor %}
+    </table>
+    </div>
+</body>
+
+<style>
+.container {
+  display: inline-block; /* Display the elements in the same line */
+  vertical-align: top; /* Align elements to the top */
+  width: 100%; /* Adjust the width as needed */
+}
+
+img{
+  margin-left: 5%;
+}
+
+table.d {
+  table-layout: fixed;
+  display: block;
+  overflow-y: auto;
+  white-space: nowrap;
+  border-collapse: collapse;
+  float: left;
+}
+
+th {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #0f2f8e;
+  color: white;  
+}
+
+
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+tr:hover {background-color:#f5f5f5;}
+
+tr:nth-child(even) {background-color: #c3d1eb;}
+</style>
+
+</html>
+

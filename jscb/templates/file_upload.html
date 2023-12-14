@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>JS-CB: A Genomic Island Prediction Tool</h1></div>
+        <p class="additional-text"> JS-CB uses Jensen –Shannon (JS) divergence measure to assess the difference in codon usage bias between two genes. It is a gene clustering method that identifies alien genes in a host genome</p>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-group">
+                <input type="submit" name="upload" class="upload-button" value="Upload File">
+            </div>
+        </form>
+        <p>Please upload file only in Genbank Format. The file must have complete genome sequence and gene co-ordinates.</p>
+        <p id="upload-success" style="display: none;"><b>File uploaded. Please hit Run Button. Results will take about a minute to be displayed.</b></p>
+        <form id="runJSCB" style="display: none;" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="submit" name="run" id="run" class="upload-button" onclick="submitForm()" value="Run">
+            </div>
+        </form>
+
+        <br>
+
+        </p>Browse results for pre computed genomes by typing name of bacteria in the box below.</p>
+        <div class="custom-dropdown">
+            <input type="text" id="autocomplete-input" class="input-box" placeholder="Type here...Name of Bacteria (Staphylococcus aureus)">
+	    <div id="autocomplete-suggestions"></div>
+	    <!---<div class="arrow-icon">&#9660;</div>--->
+	</div>
+	
+	
+
+        <p>Example of output file</p>
+        <img src="{{ testImage }}" width="300" height="300" >
+    </div>
+</body>
+</html>
+
+<style>
+
+	.header{
+	    background: linear-gradient(to right, #E6E6FA, #B0E0E6);
+	}
+
+	/* Styles for the container */
+	.custom-dropdown {
+	    position: relative;
+	    display: inline-block;
+	}
+
+	/* Styles for the input box */
+	.input-box {
+	    width: 400px;
+	    padding: 10px;
+	    border: 2px solid #ddd;
+	    border-radius: 4px;
+	}
+
+	/* Styles for the arrow icon */
+	.arrow-icon {
+	    position: absolute;
+	    top: 50%;
+	    right: 10px;
+	    transform: translateY(-50%);
+	    cursor: pointer;
+	    color: #777;
+	    font-size: 14px;
+	}
+
+	/* Hover effect for the arrow icon */
+	.arrow-icon:hover {
+	    color: #555;
+	}
+	
+	.upload-button {
+	  display: inline-block;
+	  padding: 10px 20px;
+	  background-color: #007BFF; /* Background color */
+	  color: #fff; /* Text color */
+	  border: none;
+	  border-radius: 5px;
+	  cursor: pointer;
+	  font-size: 16px;
+	}
+
+	.upload-button:hover {
+	  background-color: #0056b3; /* Change color on hover */
+	}	
+
+	div#myDivId{
+            cursor: pointer;
+	}
+
+	div#myDivId, div#moreOpt{
+            background: linear-gradient(to right, #E6E6FA, #B0E0E6);
+            color: #333;
+            padding: 8px;
+            border: solid 1px black;
+            border-radius: 10px;
+            width: 500px;
+            word-wrap: break-word;
+	}
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin: 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        p.upload-success {
+            text-align: center;
+            display: none;
+            color: #28A745;
+            font-size: 18px;
+        }
+
+        p.additional-text {
+            text-align: center;
+            font-style: italic;
+        }
+        
+       
+        
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#upload-form').on('submit', function (event) {
+        event.preventDefault(); // Prevent the form from being submitted normally
+
+        // Create a FormData object to store the form data, including the uploaded file
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: '', // URL to your Django view that handles the upload
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                // Handle the server response (e.g., show a success message)
+                $('#upload-form').hide(); // Hide the file upload form
+                $('#upload-success').show(); // Show the success message
+                $('#runJSCB').show(); // Show the "Run" form
+            },
+            error: function (xhr, status, error) {
+                // Handle errors (e.g., show an error message)
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<script>
+    function submitForm() {
+      var button = document.getElementById("run");
+      var form = document.getElementById("runJSCB");
+      console.log(button)
+      button.disabled = true;
+      button.value = "Processing..."; // Optionally, change the button text
+      var keyInput = document.createElement("input");
+      keyInput.type = "hidden";
+      keyInput.name = "run";
+      keyInput.value = "run";
+      form.appendChild(keyInput);      
+      
+      form.submit();
+    }
+
+    function myFunction(value) {
+        var loc = "results/"+value
+        window.location.href = "results/"+value;
+    }
+
+
+    // Get the input element and the suggestions div
+    const input = document.getElementById('autocomplete-input');
+    const suggestions = document.getElementById('autocomplete-suggestions');
+
+    input.addEventListener('input', function() {
+        const query = input.value;
+        console.log(query,"whwhhe")
+        // Make an AJAX request to your Django view to fetch suggestions
+        fetch('autocomplete/?query=' + query)
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous suggestions
+                suggestions.innerHTML = '';
+
+                // Create and append suggestion elements, limiting to the top 10
+                data.slice(0, 5).forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.setAttribute("id", "myDivId");
+                    optionDiv.textContent = option;
+                    optionDiv.addEventListener('click', function() {
+                        input.value = option;
+                        console.log(input.value,"thisisis")
+                        suggestions.innerHTML = '';
+                        myFunction(input.value);
+                    });
+                    suggestions.appendChild(optionDiv);
+                });
+
+                // If there are more than 10 options, add a message
+                if (data.length > 5) {
+                    const moreOptionsDiv = document.createElement('div');
+                    moreOptionsDiv.setAttribute("id", "moreOpt");
+                    moreOptionsDiv.textContent = `+${data.length - 5} more options`;
+                    suggestions.appendChild(moreOptionsDiv);
+                }
+            });
+    });
+
+    // Hide suggestions when clicking outside the input
+    document.addEventListener('click', function(event) {
+        if (!input.contains(event.target) && !suggestions.contains(event.target)) {
+            suggestions.innerHTML = '';
+        }
+    });
+</script>
+
+

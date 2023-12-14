@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Add some basic CSS for styling */
+        .search-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 5px;
+        }
+        
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            border: 1px solid #ddd;
+            z-index: 1;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-option {
+            padding: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-dropdown">
+        <input type="text" class="search-input" placeholder="Search for an option">
+        <div class="dropdown-options">
+            <div class="dropdown-option">Option 1</div>
+            <div class="dropdown-option">Option 2</div>
+            <div class="dropdown-option">Option 3</div>
+            <div class="dropdown-option">Option 4</div>
+            <div class="dropdown-option">Option 5</div>
+            <div class="dropdown-option">Option 6</div>
+            <!-- Add more options as needed -->
+        </div>
+    </div>
+
+    <script>
+        const input = document.querySelector(".search-input");
+        const options = document.querySelectorAll(".dropdown-option");
+        
+        input.addEventListener("input", function() {
+            const searchTerm = input.value.toLowerCase();
+            
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    option.style.display = "block";
+                } else {
+                    option.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
