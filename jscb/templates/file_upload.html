@@ -5,8 +5,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="header"><h1>JS-CB: A Genomic Island Prediction Tool</h1></div>
-        <p class="additional-text"> JS-CB uses Jensen –Shannon (JS) divergence measure to assess the difference in codon usage bias between two genes. It is a gene clustering method that identifies alien genes in a host genome</p>
+        <div class="header"><h1>GI-CUB: A Genomic Island Prediction Tool</h1></div>
+        <p class="additional-text"> GI-CUB uses Jensen –Shannon (JS) divergence measure to assess the difference in codon usage bias between two genes. It is a gene clustering method that identifies alien genes in a host genome</p>
         <form id="upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
